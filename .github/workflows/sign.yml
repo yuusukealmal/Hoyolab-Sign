@@ -1,0 +1,27 @@
+name: HoyoLab Auto Sign
+on:
+  schedule:
+    - cron: 0 22 * * *
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10.11
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python3 -m pip install -r requirements.txt
+      - name: HoYoLab Sign
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ltuid_v2: ${{ secrets.ltuid_v2 }}
+          ltoken_v2: ${{ secrets.ltoken_v2 }}
+          userid: ${{ secrets.userid }}
+          webhook_url: ${{ secrets.webhook_url }}
+        run: |
+          python3 main.py
