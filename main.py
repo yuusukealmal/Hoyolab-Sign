@@ -54,9 +54,11 @@ def main():
             results.append({"name": game.name, "value": r["message"]})
 
         if r["message"] == "OK":
-            days = req(methods[1], game, cookies)["data"]["total_sign_day"]
-            rewards = req(methods[2], game)["data"]["awards"][days-1]
-            results.append({"name": game.name, "value": f'`{rewards["name"]}` x{rewards["cnt"]}'})
+            is_sign = req(methods[1], game, cookies)["data"]["total_sign_day"]
+            sign_rewards = req(methods[2], game)["data"]
+            rewards = sign_rewards["awards"][is_sign-1]
+            total_days = len(sign_rewards["awards"])
+            results.append({"name": f'{game.name} {is_sign}/{total_days}', "value": f'`{rewards["name"]}` x{rewards["cnt"]}'})
 
     time = datetime.utcnow() + timedelta(hours=8)
 
